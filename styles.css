@@ -1,0 +1,276 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #0b1c1e;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+/* --------------------Top */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  max-width: 1220px;
+  margin: 0 auto;
+}
+
+.logo {
+  color: #bbf7d0;
+  font-weight: bold;
+  font-size: 1.125rem;
+}
+
+#menu-area {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 18rem;
+  height: 6rem;
+  z-index: 40;
+}
+/* ---------------------Nav */
+#main {
+  position: fixed;
+  top: 1.5rem;
+  right: 5%;
+  transition: opacity 0.3s;
+  z-index: 50;
+  pointer-events: auto;
+}
+
+#main.visible {
+  opacity: 1;
+}
+
+#main.hidden {
+  opacity: 0;
+  pointer-events: auto;
+}
+
+#main a {
+  margin-left: 1.5rem;
+  color: #bbf7d0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#main a:hover {
+  color: #34d399;
+  text-decoration: underline;
+}
+/* -------------------Text blocks */
+.section {
+  position: relative;
+  padding: 5rem 1.5rem;
+  max-width: 45rem;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.section p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #d1d5db;
+}
+
+.section-hero {
+  padding: 8rem 1.5rem;
+  max-width: 50rem;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.section-hero p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin: 0 auto;
+  max-width: 85%;
+  text-align: center;
+  color: #d1d5db;
+}
+/* -------------------Headers */
+h1 {
+  font-size: 2.25rem;
+  font-weight: bold;
+  text-align: center;
+  max-width: 50rem;
+  margin: 0 auto 1.5rem;
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 3.75rem;
+  }
+}
+
+h2 {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+/* -------------------Skills grid */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  color: #d1d5db;
+}
+
+@media (min-width: 640px) {
+  .skills-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .skills-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.skills-grid span {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  text-align: center;
+}
+
+.skill-item {
+  transition: background-color 0.3s ease;
+}
+
+.skill-item:hover,
+.skill-item:active {
+  background-color: #134e4a;
+}
+
+/* ------------------------Contacts */
+#contact ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 2rem;
+}
+
+#contact li {
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+}
+
+#contact a {
+  color: #bbf7d0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#contact a:hover {
+  color: #34d399;
+  text-decoration: underline;
+}
+
+/* ------------------------Footer */
+footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+  padding: 2.5rem 1rem;
+}
+
+/* ----------------------Back to Top */
+#back-to-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background-color: #bbf7d0;
+  color: #000000;
+  padding: 0.5rem 1rem;
+  border-radius: 99px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+  z-index: 50;
+}
+
+#back-to-top:hover {
+  background-color: rgb(74 222 128);
+  color: white;
+}
+
+#back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ----------------------Skills Canvas */
+#skill-canvas {
+  width: 700px;
+  height: 700px;
+}
+
+@media (max-width: 329px) {
+  #skill-canvas {
+    width: 290px;
+    height: 300px;
+  }
+}
+
+@media (min-width: 330px) and (max-width: 399px) {
+  #skill-canvas {
+    width: 330px;
+    height: 300px;
+  }
+}
+
+@media (min-width: 400px) and (max-width: 479px) {
+  #skill-canvas {
+    width: 370px;
+    height: 350px;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 549px) {
+  #skill-canvas {
+    width: 450px;
+    height: 400px;
+  }
+}
+
+@media (min-width: 550px) and (max-width: 649px) {
+  #skill-canvas {
+    width: 530px;
+    height: 400px;
+  }
+}
+
+@media (min-width: 650px) and (max-width: 750px) {
+  #skill-canvas {
+    width: 630px;
+    height: 400px;
+  }
+}
+
+/* Compact menu */
+@media (max-width: 420px) {
+  #main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    right: 1rem;
+    top: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  #main a {
+    margin: 0;
+  }
+}

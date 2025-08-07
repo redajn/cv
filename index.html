@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Andrew Ognev Ruby Backend Developer</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/scrollreveal"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">Andrew Ognev</div>
+    <div id="menu-area"></div>
+    <nav id="main" class="visible">
+      <a href="#about">about</a>
+      <a href="#skills">skills</a>
+      <a href="#contact">contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section id="hero" class="section-hero reveal">
+    <h1>Ruby Backend Developer</h1>
+    <p>
+      I design and build backend systems with Ruby, PostgreSQL, Docker, and more. Available for remote work or relocation.
+    </p>
+  </section>
+
+  <!-- About Me -->
+  <section id="about" class="section reveal">
+    <h2>About Me</h2>
+    <p>
+      I'm a backend developer with over 5 years of experience in Ruby on Rails, PostgreSQL, and scalable microservice architecture.
+      I’ve worked on financial platforms, complex integrations, and performance optimization. Based in Tbilisi, open to remote or relocation.
+    </p>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="section reveal">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <span class="skill-item" id="ruby-span">Ruby</span>
+      <span class="skill-item" id="rails-span">Rails</span>
+      <span class="skill-item" id="pg-span">PostgreSQL</span>
+      <span class="skill-item" id="redis-span">Redis</span>
+      <span class="skill-item" id="sidekiq-span">Sidekiq</span>
+      <span class="skill-item" id="kafka-span">Kafka</span>
+      <span class="skill-item" id="docker-span">Docker</span>
+      <span class="skill-item" id="gitlab-span">GitLab CI/CD</span>
+      <span class="skill-item" id="sentry-span">Sentry</span>
+      <span class="skill-item" id="rspec-span">RSpec</span>
+      <span class="skill-item" id="rest-span">REST APIs</span>
+      <span class="skill-item" id="microservices-span">Microservices</span>
+    </div>
+    <canvas id="skill-canvas" style="background-color: #0b1c1e;"></canvas>
+    <script type="module" src="js/logofall/main.js"></script>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section reveal">
+    <h2 class="text-3xl font-bold mb-6">Contact</h2>
+    <p class="text-gray-300 mb-8">
+      I'm currently open to opportunities and collaboration. Feel free to reach out through any of the following:
+    </p>
+    <ul class="space-y-4 text-lg">
+      <li><a href="mailto:dev.ognev@gmail.com" class="text-green-200 hover:underline hover:text-green-400 transion duration-300">dev.ognev@gmail.com</a></li>
+      <li><a href="https://github.com/redajn" class="text-green-200 hover:underline hover:text-green-400 duration-300" target="_blank">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/andrey-ognev/" class="text-green-200 hover:underline hover:text-green-400 duration-300" target="_blank">LinkedIn</a></li>
+      <li><a href="https://t.me/Sapiol" class="text-green-200 hover:underline hover:text-green-400 duration-300" target="_blank">Telegram</a></li>
+    </ul>
+  </section>
+
+  <!-- Back to Top Button -->
+  <a href="#" id="back-to-top">
+    ↑ Top
+  </a>
+
+  <!-- Footer -->
+  <footer class="text-center text-sm text-gray-500 py-10">
+    &copy; 2025 Andrew Ognev. All rights reserved.
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>
