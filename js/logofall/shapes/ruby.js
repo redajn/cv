@@ -1,5 +1,5 @@
 export const rubyMap = [
-  { method: 'line_to', data: [0,27] },
+  { method: 'move_to', data: [0,27] },
   { method: 'line_to', data: [13, 15] },
 
   { method: 'line_to', data: [38, 15] },

@@ -4,7 +4,7 @@ export class RenderShape {
     this.strokeStyle = strokeStyle;
   }
 
-  draw(ctx, x, y, angle, radius) {
+  draw(ctx, x, y, angle, body) {
     ctx.save();
     ctx.translate(x,y);
     ctx.rotate(angle);
@@ -12,7 +12,19 @@ export class RenderShape {
     ctx.beginPath();
     for (let i = 0; i < this.shape.length; i++) {
       const line = this.shape[i]
-      const data = line.data.map(n => n - radius)
+      let data = [];
+      switch (body.type) {
+        case 'circle':
+          data = line.data.map(n => n - body.radius);
+          break;
+        case 'rect':
+          data.push(line.data[0] - body.width/2);
+          data.push(line.data[1] - body.height/2);
+          break;
+        default:
+          console.log('Unknown shape type');
+      }
+
       switch (line.method) {
         case 'move_to':
           ctx.moveTo(...data);
