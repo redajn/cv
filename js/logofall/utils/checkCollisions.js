@@ -37,14 +37,6 @@ function circleCircle(a, b) {
     const v1 = a.vel.x * nx + a.vel.y * ny;
     const v2 = b.vel.x * nx + b.vel.y * ny;
 
-    if (Math.abs(v1) < 0.01) {
-      a.body.resting = true
-    }
-
-    if (Math.abs(v2) < 0.01) {
-      b.body.resting = true
-    }
-
     const m1 = a.mass;
     const m2 = b.mass;
 
@@ -58,6 +50,24 @@ function circleCircle(a, b) {
     a.vel.y -= optimizedP * m2 * ny;
     b.vel.x += optimizedP * m1 * nx;
     b.vel.y += optimizedP * m1 * ny;
+
+    // ***************************************************** FRICTION
+    // tangential velocity components
+    const tx = -ny, ty = nx;
+    const tA = a.vel.x * tx + a.vel.y * ty;
+    const tB = b.vel.x * tx + b.vel.y * ty;
+
+    a.body.angularVelocity = tA * 0.6/ a.radius
+    b.body.angularVelocity = tB * 0.6/ b.radius
+
+    //  infinit spining fix
+    if (Math.abs(a.body.angularVelocity) < 0.005) {
+      a.body.angularVelocity = 0
+    }
+
+    if (Math.abs(b.body.angularVelocity) < 0.005) {
+      b.body.angularVelocity = 0
+    }
   }
 }
 
@@ -78,8 +88,8 @@ function circleRect(circle, rect) {
   const dy = cy - closestY;
 
   const distSq = dx * dx + dy * dy;
+
   if (distSq < cr * cr) {
-    console.log('collision!')
     const dist = Math.sqrt(distSq);
     const overlap = cr - dist;
 
@@ -93,13 +103,25 @@ function circleRect(circle, rect) {
 
     // new vector
     const v = circle.vel.x * nx + circle.vel.y * ny;
-    console.log(v)
-    console.log(circle.body.angularVelocity)
-    if (Math.abs(v) < 0.01) {
-      circle.body.resting = true
-    }
 
     circle.vel.x -= 1.4 * v * nx;
     circle.vel.y -= 1.4 * v * ny;
+
+    // *************************************************** FRICTION
+    const tx = -ny, ty = nx; // tangent to the normal
+    const tangSpeed = circle.vel.x * tx + circle.vel.y * ty;
+    const friction = 0.35;
+    circle.body.angularVelocity = (tangSpeed * 0.6 / circle.radius)
+
+    //  infinit spining fix
+    if (Math.abs(circle.body.angularVelocity) < 0.005) {
+      circle.body.angularVelocity = 0
+    }
+
+    const newTangSpeed = tangSpeed * (1 - friction);
+    const deltaTangSpeed = newTangSpeed - tangSpeed;
+
+    circle.vel.x += deltaTangSpeed * tx;
+    circle.vel.y += deltaTangSpeed * ty;
   }
 }
