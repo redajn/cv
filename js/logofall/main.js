@@ -73,8 +73,9 @@ function animate() {
 resizeCanvasToDisplaySize(canvas);
 
 level_objects.push(new Actor(canvas.width/2, canvas.height, groundMap, { type: 'rect', width: 700, height: 2 }, '#bbf7d0', false));
-level_objects.push(new Actor(0, canvas.height/2, wallMap, { type: 'rect', width: 2, height: 700 }, '#bbf7d0', false));
-level_objects.push(new Actor(canvas.width, canvas.height/2, wallMap, { type: 'rect', width: 2, height: 700 }, '#bbf7d0', false));
+
+level_objects.push(new Actor(0, canvas.height/2, wallMap, { type: 'rect', width: 2, height: 500 }, '#bbf7d0', false));
+level_objects.push(new Actor(canvas.width, canvas.height/2, wallMap, { type: 'rect', width: 2, height: 500 }, '#bbf7d0', false));
 
 for (const [key, value] of Object.entries(mapRegistry)) {
   const span = document.getElementById(`${key}-span`);

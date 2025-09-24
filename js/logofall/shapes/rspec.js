@@ -1,24 +1,20 @@
 export const rspecMap = [
-  { method: 'line_to', data: [0,27] },
-  { method: 'line_to', data: [13, 15] },
-
-  { method: 'line_to', data: [38, 15] },
-
-  { method: 'line_to', data: [50, 27] },
-  { method: 'line_to', data: [25, 50] },
-
-  { method: 'line_to', data: [0, 27] },
-
-  { method: 'line_to', data: [50, 27] },
-  { method: 'line_to', data: [37, 15] },
-
-  { method: 'line_to', data: [37, 27] },
-  { method: 'line_to', data: [25, 50] },
-
-  { method: 'line_to', data: [13, 27] },
-  { method: 'line_to', data: [13, 15] },
-
-  { method: 'line_to', data: [13, 27] },
-  { method: 'line_to', data: [25, 15] },
-  { method: 'line_to', data: [37, 27] }
+  { method: 'arc', data: [25, 25, 25 + 25, 0 + 25, 2 * Math.PI + 25] },
+  { method: 'move_to', data: [42, 25] },
+  { method: 'arc', data: [25, 25, 19 + 25, 0 + 25, 2 * Math.PI + 25] },
+  { method: 'move_to', data: [25, 37]},
+  { method: 'line_to', data: [12, 23]},
+  { method: 'line_to', data: [18, 16]},
+  { method: 'line_to', data: [32, 16]},
+  { method: 'line_to', data: [38, 23]},
+  { method: 'line_to', data: [25, 37]},
+  { method: 'move_to', data: [40, 37]},
+  { method: 'line_to', data: [41, 40]},
+  { method: 'line_to', data: [45, 40]},
+  { method: 'move_to', data: [9, 36]},
+  { method: 'line_to', data: [6, 36]},
+  { method: 'line_to', data: [5, 39]},
+  { method: 'move_to', data: [27, 0]},
+  { method: 'line_to', data: [29, 3]},
+  { method: 'line_to', data: [27, 6]}
 ];

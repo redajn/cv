@@ -1,24 +1,40 @@
 export const sidekiqMap = [
-  { method: 'line_to', data: [0,27] },
-  { method: 'line_to', data: [13, 15] },
+  { method: 'arc', data: [25, 25, 50, 0 + 25, 2 * Math.PI + 25] },
+  { method: 'move_to', data: [15, 18]},
+  { method: 'line_to', data: [14, 10]},
+  { method: 'bezier_curve_to', data: [6, 12, 7, 18, 12, 19] },
+  { method: 'line_to', data: [8, 28]},
+  { method: 'line_to', data: [8, 31]},
+  { method: 'line_to', data: [9, 33]},
+  { method: 'line_to', data: [10, 30]},
+  { method: 'line_to', data: [14, 26]},
+  { method: 'line_to', data: [19, 27]},
+  { method: 'line_to', data: [21, 28]},
+  { method: 'line_to', data: [20, 43]},
+  { method: 'line_to', data: [16, 45]},
 
-  { method: 'line_to', data: [38, 15] },
+  { method: 'line_to', data: [16, 46]},
 
-  { method: 'line_to', data: [50, 27] },
-  { method: 'line_to', data: [25, 50] },
+  { method: 'line_to', data: [22, 45]},
+  { method: 'line_to', data: [22, 43]},
 
-  { method: 'line_to', data: [0, 27] },
+  { method: 'line_to', data: [26, 30]},
+  { method: 'line_to', data: [28, 27]},
+  { method: 'line_to', data: [41, 17]},
 
-  { method: 'line_to', data: [50, 27] },
-  { method: 'line_to', data: [37, 15] },
-
-  { method: 'line_to', data: [37, 27] },
-  { method: 'line_to', data: [25, 50] },
-
-  { method: 'line_to', data: [13, 27] },
-  { method: 'line_to', data: [13, 15] },
-
-  { method: 'line_to', data: [13, 27] },
-  { method: 'line_to', data: [25, 15] },
-  { method: 'line_to', data: [37, 27] }
+  { method: 'line_to', data: [43, 16]},
+  { method: 'line_to', data: [41, 10]},
+  { method: 'line_to', data: [40, 10]},
+  { method: 'line_to', data: [40, 15]},
+  { method: 'line_to', data: [27, 22]},
+  { method: 'line_to', data: [24, 22]},
+  { method: 'line_to', data: [19, 20]},
+  { method: 'line_to', data: [24, 19]},
+  { method: 'line_to', data: [26, 13]},
+  { method: 'line_to', data: [24, 8]},
+  { method: 'line_to', data: [22, 9]},
+  { method: 'line_to', data: [23, 13]},
+  { method: 'line_to', data: [21, 16]},
+  { method: 'line_to', data: [17, 16]},
+  { method: 'line_to', data: [15, 18]}
 ];

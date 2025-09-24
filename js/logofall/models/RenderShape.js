@@ -38,6 +38,8 @@ export class RenderShape {
         case 'bezier_curve_to':
           ctx.bezierCurveTo(...data);
           break;
+        case 'arc':
+          ctx.arc(...data);
         default:
           console.log('Unknown draw method');
       }

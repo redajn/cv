@@ -1,24 +1,25 @@
 export const pgMap = [
-  { method: 'line_to', data: [0,27] },
-  { method: 'line_to', data: [13, 15] },
-
-  { method: 'line_to', data: [38, 15] },
-
-  { method: 'line_to', data: [50, 27] },
-  { method: 'line_to', data: [25, 50] },
-
-  { method: 'line_to', data: [0, 27] },
-
-  { method: 'line_to', data: [50, 27] },
-  { method: 'line_to', data: [37, 15] },
-
-  { method: 'line_to', data: [37, 27] },
-  { method: 'line_to', data: [25, 50] },
-
-  { method: 'line_to', data: [13, 27] },
-  { method: 'line_to', data: [13, 15] },
-
-  { method: 'line_to', data: [13, 27] },
-  { method: 'line_to', data: [25, 15] },
-  { method: 'line_to', data: [37, 27] }
+  { method: 'move_to', data: [21, 31]},
+  { method: 'bezier_curve_to', data: [8, 31, 8, 8, 20, 6] },
+  { method: 'bezier_curve_to', data: [39, 5, 34, 27, 31, 31] },
+  { method: 'bezier_curve_to', data: [31, 51, 20, 51, 21, 31] },
+  { method: 'move_to', data: [15, 8]},
+  { method: 'bezier_curve_to', data: [-9, -3, 3, 30, 7, 33] },
+  { method: 'line_to', data: [15, 29]},
+  { method: 'move_to', data: [28, 7]},
+  { method: 'bezier_curve_to', data: [46, -2, 44, 23, 33, 28] },
+  { method: 'move_to', data: [12, 16]},
+  { method: 'bezier_curve_to', data: [22, 10, 21, 22, 18, 30] },
+  { method: 'move_to', data: [33, 14]},
+  { method: 'bezier_curve_to', data: [24, 11, 29, 25, 32, 28] },
+  { method: 'move_to', data: [17, 31]},
+  { method: 'bezier_curve_to', data: [16, 33, 14, 34, 11, 35] },
+  { method: 'bezier_curve_to', data: [16, 38, 18, 36, 21, 33] },
+  { method: 'move_to', data: [33, 29]},
+  { method: 'bezier_curve_to', data: [35, 31, 37, 32, 41, 31] },
+  { method: 'bezier_curve_to', data: [37, 35, 34, 35, 31, 33] },
+  { method: 'move_to', data: [15, 17]},
+  { method: 'line_to', data: [17, 17]},
+  { method: 'move_to', data: [30, 16]},
+  { method: 'line_to', data: [32, 16]}
 ];
