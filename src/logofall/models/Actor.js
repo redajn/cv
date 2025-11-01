@@ -7,10 +7,9 @@ export class Actor {
     this.shape = new RenderShape(shapeData, color);
   }
 
-  update(canvasHeight) {
-    this.body.applyGravity(0.01);
-    this.body.integrate();
-    // this.body.checkRest(canvasHeight);
+  update(canvasHeight, deltaTime) {
+    this.body.applyGravity(0.01, deltaTime);
+    this.body.integrate(deltaTime);
   }
 
   draw(ctx) {

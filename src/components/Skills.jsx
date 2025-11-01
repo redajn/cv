@@ -119,7 +119,12 @@ function Skills() {
     }
 
     // Animation loop
+    let lastTime = performance.now()
     function animate() {
+      const currentTime = performance.now()
+      const deltaTime = currentTime - lastTime
+      lastTime = currentTime
+
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       // Handle canvas resize
@@ -146,7 +151,7 @@ function Skills() {
           objectsRef.current.splice(i, 1)
           continue
         }
-        objectsRef.current[i].update(canvas.height)
+        objectsRef.current[i].update(canvas.height, deltaTime)
         objectsRef.current[i].draw(ctx)
       }
 

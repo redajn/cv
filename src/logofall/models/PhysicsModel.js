@@ -13,30 +13,17 @@ export class PhysicsModel {
     this.resting = false;
   }
 
-  applyGravity(gravity) {
-    this.vel.y += gravity * this.mass;
+  applyGravity(gravity, deltaTime) {
+    const normalizedDelta = deltaTime / 8;
+    this.vel.y += gravity * this.mass * normalizedDelta;
   }
 
-  integrate() {
+  integrate(deltaTime) {
+    const normalizedDelta = deltaTime / 8;
     if (this.movable && !this.resting) {
-      this.angle += this.angularVelocity;
+      this.angle += this.angularVelocity * normalizedDelta;
     }
-    this.pos.y += this.vel.y;
-    this.pos.x += this.vel.x;
+    this.pos.y += this.vel.y * normalizedDelta;
+    this.pos.x += this.vel.x * normalizedDelta;
   }
-
-  // looks like it's need to be reworked and not related to canvas heigh
-  // checkRest(canvasHeight) {
-  //   if (this.pos.y > canvasHeight - this.shape.radius) {
-  //     this.pos.y = canvasHeight - this.shape.radius;
-  //     this.vel.y *= -0.6;
-  //     console.log(this.vel.y, this.vel.x)
-  //   }
-
-  //   if (Math.abs(this.vel.y) < 0.005 && Math.abs(this.pos.y - (canvasHeight - this.shape.radius)) < 1) {
-  //     this.vel = { x:0, y:0 };
-  //     this.angularVelocity = 0;
-  //     this.resting = true;
-  //   }
-  // }
 }
