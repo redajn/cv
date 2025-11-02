@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import ScrollReveal from 'scrollreveal'
+import { rubyMap } from '../logofall/shapes/ruby.js'
 
 function About() {
   const aboutRef = useRef(null)
@@ -100,6 +101,8 @@ function About() {
     // Food spawn animation state
     let foodSpawnTime = 0
     let newGameFoodSpawnTime = 0
+    let foodEatTime = 0
+    let foodEatDuration = 200
 
     function generateFoodPosition() {
       return {
@@ -249,6 +252,7 @@ function About() {
       headGlowStartTime = -1
       previousHeadPos = previousHeadPos || {x: center.x, y: center.y}
       waveStartTime = 0
+      foodEatTime = 0
     }
 
     function moveSnake() {
@@ -275,7 +279,8 @@ function About() {
 
       if (head.x === food.x && head.y === food.y) {
         score++
-        generateFood()
+        foodEatTime = Date.now()
+        // Don't generate new food immediately, wait for fade out animation
       } else {
         snake.pop()
       }
@@ -316,6 +321,13 @@ function About() {
       return Math.min(1, timeSinceSpawn / FOOD_SPAWN_DURATION)
     }
 
+    function calculateFoodEatOpacity(eatTime) {
+      if (eatTime <= 0) return 1
+      const timeSinceEat = Date.now() - eatTime
+      const opacity = Math.max(0, 1 - timeSinceEat / foodEatDuration)
+      return opacity
+    }
+
     function calculateFoodGlow(foodOpacity) {
       if (foodOpacity >= 1) {
         const pulsePhase = (Date.now() % FOOD_PULSE_DURATION) / FOOD_PULSE_DURATION
@@ -328,21 +340,45 @@ function About() {
       if (waveOpacity <= 0) return
 
       const spawnTime = customSpawnTime ?? foodSpawnTime
-      const foodOpacity = calculateFoodOpacity(spawnTime)
+      const spawnOpacity = calculateFoodOpacity(spawnTime)
+      const eatOpacity = calculateFoodEatOpacity(foodEatTime)
+      const foodOpacity = Math.min(spawnOpacity, eatOpacity)
+      
+      if (foodOpacity <= 0) return
+      
       const glowIntensity = calculateFoodGlow(foodOpacity)
 
-      const rubySize = gridSize * 0.55
+      const rubySize = gridSize * 0.9
+      const scale = rubySize / 50 // rubyMap is approximately 50x50
+      
       ctx.save()
       ctx.globalAlpha = waveOpacity * foodOpacity
+      ctx.translate(x, y)
+      ctx.scale(scale, scale)
       
       if (glowIntensity > 0) {
-        ctx.shadowBlur = FOOD_GLOW_INTENSITY * glowIntensity
+        ctx.shadowBlur = FOOD_GLOW_INTENSITY * glowIntensity / scale
         ctx.shadowColor = COLORS.food
       }
       
       ctx.strokeStyle = COLORS.food
-      ctx.lineWidth = 3
-      ctx.strokeRect(x - rubySize / 2, y - rubySize / 2, rubySize, rubySize)
+      ctx.lineWidth = 2 / scale
+      
+      ctx.beginPath()
+      for (let i = 0; i < rubyMap.length; i++) {
+        const line = rubyMap[i]
+        const data = line.data.map(n => n - 25) // -25 to center the ruby, had to be reworked
+        
+        switch (line.method) {
+          case 'move_to':
+            ctx.moveTo(...data)
+            break
+          case 'line_to':
+            ctx.lineTo(...data)
+            break
+        }
+      }
+      ctx.stroke()
       ctx.restore()
     }
 
@@ -398,9 +434,24 @@ function About() {
         }
       }
 
-      const foodX = food.x * gridSize + gridSize / 2
-      const foodY = food.y * gridSize + gridSize / 2
-      drawFood(foodX, foodY, getCellWaveOpacity(food.y * gridSize))
+      // Generate new food after fade out animation completes
+      if (foodEatTime > 0) {
+        const timeSinceEat = Date.now() - foodEatTime
+        if (timeSinceEat >= foodEatDuration) {
+          foodEatTime = 0
+          generateFood()
+        } else {
+          // Draw food fading out
+          const foodX = food.x * gridSize + gridSize / 2
+          const foodY = food.y * gridSize + gridSize / 2
+          drawFood(foodX, foodY, getCellWaveOpacity(food.y * gridSize))
+        }
+      } else {
+        // Draw normal food
+        const foodX = food.x * gridSize + gridSize / 2
+        const foodY = food.y * gridSize + gridSize / 2
+        drawFood(foodX, foodY, getCellWaveOpacity(food.y * gridSize))
+      }
     }
 
     function gameLoop() {
