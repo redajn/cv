@@ -5,6 +5,7 @@ function About() {
   const aboutRef = useRef(null)
   const canvasRef = useRef(null)
   const animationFrameRef = useRef(null)
+  const [isManualMode, setIsManualMode] = React.useState(false)
 
   useEffect(() => {
     if (aboutRef.current) {
@@ -222,6 +223,7 @@ function About() {
       score = 0
       gameSpeed = 600
       manualControl = false
+      setIsManualMode(false)
 
       const center = getCenterPosition()
 
@@ -522,9 +524,12 @@ function About() {
 
     function toggleManualControl() {
       manualControl = !manualControl
+      setIsManualMode(manualControl)
       if (manualControl) {
         canvas.setAttribute('tabindex', '0')
         canvas.focus()
+      } else {
+        canvas.blur()
       }
     }
 
@@ -552,7 +557,11 @@ function About() {
 
     const handleDocumentTouchStart = (e) => {
       if (!canvas.contains(e.target)) {
-        manualControl = false
+        if (manualControl) {
+          manualControl = false
+          setIsManualMode(false)
+          canvas.blur()
+        }
       }
     }
 
@@ -697,6 +706,16 @@ function About() {
     }
   }, [])
 
+  const handleOverlayClick = (e) => {
+    if (isManualMode && e.target.classList.contains('snake-overlay')) {
+      // Click outside canvas - deactivate manual mode
+      const canvas = canvasRef.current
+      if (canvas) {
+        canvas.click()
+      }
+    }
+  }
+
   return (
     <section id="about" className="section reveal" ref={aboutRef}>
       <h2>About Me</h2>
@@ -704,24 +723,36 @@ function About() {
         I'm a backend developer with over 5 years of experience in Ruby on Rails, PostgreSQL, and scalable microservice architecture.
         I've worked on financial platforms, complex integrations, and performance optimization. Based in Tbilisi, open to remote or relocation.
       </p>
-      <p style={{ marginTop: '2rem', marginBottom: '1rem', color: '#d1d5db' }}>
-        Click on the game below to take manual control. Use arrow keys or WASD to control the snake.
-        On mobile, swipe to control or tap to toggle manual mode.
-      </p>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
+      <div 
+        style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          marginTop: '1.5rem',
+          position: 'relative',
+          zIndex: isManualMode ? 120 : 'auto'
+        }}
+      >
         <canvas 
           id="snake-canvas" 
           ref={canvasRef}
+          className={isManualMode ? 'snake-canvas-focused' : ''}
           style={{ 
             backgroundColor: '#0b1c1e',
             display: 'block',
             margin: '0 auto',
             maxWidth: '100%',
             aspectRatio: '1 / 1',
-            outline: 'none'
+            outline: 'none',
+            position: 'relative',
+            zIndex: isManualMode ? 121 : 'auto',
+            transition: 'box-shadow 0.8s ease-out'
           }}
         />
       </div>
+      <div 
+        className={`snake-overlay ${isManualMode ? 'active' : ''}`}
+        onClick={handleOverlayClick}
+      />
     </section>
   )
 }
