@@ -228,40 +228,63 @@ h2 {
   font-weight: bold;
   margin-bottom: 1.5rem;
 }
-/* -------------------Skills grid */
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+/* -------------------Skills carousel */
+.skills-carousel-container {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  margin-bottom: 2rem;
+  touch-action: none;
+}
+
+.skills-carousel {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
-  color: #d1d5db;
+  animation: scroll 30s linear infinite;
+  width: fit-content;
 }
 
-@media (min-width: 640px) {
-  .skills-grid {
-    grid-template-columns: repeat(3, 1fr);
+.skills-row {
+  display: flex;
+  gap: 1rem;
+  width: fit-content;
+}
+
+.skills-row:nth-child(2) {
+  margin-left: 4rem;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 
-@media (min-width: 768px) {
-  .skills-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.skills-grid span {
+.skill-item {
+  flex-shrink: 0;
   background-color: rgba(255, 255, 255, 0.05);
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
   text-align: center;
-}
-
-.skill-item {
+  color: #d1d5db;
+  white-space: nowrap;
   transition: background-color 0.3s ease;
 }
 
 .skill-item:hover,
-.skill-item:active {
+.skill-item:active,
+.skill-item.touch-active {
   background-color: #134e4a;
+}
+
+@media (max-width: 768px) {
+  .skills-row:nth-child(2) {
+    margin-left: 2rem;
+  }
 }
 
 /* ------------------------Contacts */
@@ -351,10 +374,26 @@ footer {
   }
 }
 
+@media (min-width: 330px) and (max-width: 399px) and (min-height: 800px) {
+  #skill-canvas {
+    width: 100%;
+    max-width: 370px;
+    height: 500px;
+  }
+}
+
 @media (min-width: 400px) and (max-width: 479px) {
   #skill-canvas {
     width: 370px;
     height: 350px;
+  }
+}
+
+@media (min-width: 400px) and (max-width: 479px) and (min-height: 800px) {
+  #skill-canvas {
+    width: 100%;
+    max-width: 400px;
+    height: 550px;
   }
 }
 
@@ -372,10 +411,42 @@ footer {
   }
 }
 
-@media (min-width: 650px) and (max-width: 750px) {
+@media (min-width: 650px) and (max-width: 700px) {
   #skill-canvas {
     width: 630px;
     height: 400px;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 900px) {
+  #skill-canvas {
+    width: 100%;
+    max-width: 700px;
+    height: 550px;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1200px) {
+  #skill-canvas {
+    width: 100%;
+    max-width: 800px;
+    height: 600px;
+  }
+}
+
+@media (min-width: 1200px) {
+  #skill-canvas {
+    width: 100%;
+    max-width: 900px;
+    height: 650px;
+  }
+}
+
+@media (min-width: 1400px) {
+  #skill-canvas {
+    width: 100%;
+    max-width: 1000px;
+    height: 700px;
   }
 }
 

@@ -79,10 +79,8 @@ function Skills() {
       }
     }
 
-    // Initialize canvas size
     resizeCanvasToDisplaySize(canvas)
 
-    // Initialize level objects (will be updated in animate if canvas size changes)
     if (canvas.width > 0 && canvas.height > 0) {
       levelObjectsRef.current = [
         new Actor(
@@ -111,7 +109,6 @@ function Skills() {
         )
       ]
     } else {
-      // Initialize with default positions, will be corrected when canvas is resized
       levelObjectsRef.current = [
         new Actor(
           350,
@@ -140,7 +137,6 @@ function Skills() {
       ]
     }
 
-    // Setup hover listeners
     const cleanupFunctions = []
     for (const [key] of Object.entries(mapRegistry)) {
       const cleanup = spawnActorOnHover(`${key}-span`, mapRegistry[key])
@@ -149,15 +145,108 @@ function Skills() {
       }
     }
 
-    // Animation loop
+    const skillsContainer = document.querySelector('.skills-carousel-container')
+    let lastTouchedElement = null
+    const activeSkillItems = new Set()
+
+    const removeActiveClass = () => {
+      document.querySelectorAll('.skill-item.touch-active').forEach(item => {
+        item.classList.remove('touch-active')
+      })
+      activeSkillItems.clear()
+    }
+
+    const handleTouchStart = (e) => {
+      if (e.touches.length === 0) return
+      const touch = e.touches[0]
+      const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY)
+      const skillItem = elementUnderTouch?.closest('.skill-item[id]')
+      
+      if (skillItem && skillItem.id) {
+        e.preventDefault()
+        skillItem.classList.add('touch-active')
+        activeSkillItems.add(skillItem)
+      }
+    }
+
+    const handleTouchMove = (e) => {
+      if (e.touches.length === 0) return
+      
+      const touch = e.touches[0]
+      const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY)
+      
+      if (!elementUnderTouch) {
+        removeActiveClass()
+        lastTouchedElement = null
+        return
+      }
+
+      const skillItem = elementUnderTouch.closest('.skill-item[id]')
+      
+      if (skillItem && skillItem.id) {
+        e.preventDefault()
+        
+        if (!activeSkillItems.has(skillItem)) {
+          skillItem.classList.add('touch-active')
+          activeSkillItems.add(skillItem)
+        }
+        
+        if (skillItem.id !== lastTouchedElement?.id) {
+          if (lastTouchedElement && !activeSkillItems.has(lastTouchedElement)) {
+            lastTouchedElement.classList.remove('touch-active')
+          }
+          
+          lastTouchedElement = skillItem
+          const skillId = skillItem.id.replace('-span', '')
+          const map = mapRegistry[skillId]
+          
+          if (map) {
+            const spawnMargin = ACTOR.SPAWN_X_MARGIN * 2
+            const x = Math.random() * (canvas.width - spawnMargin) + ACTOR.SPAWN_X_MARGIN
+            objectsRef.current.push(
+              new Actor(
+                x, 
+                ACTOR.SPAWN_Y_OFFSET, 
+                map, 
+                { type: 'circle', radius: ACTOR.SPAWN_RADIUS }, 
+                ACTOR.DEFAULT_COLOR
+              )
+            )
+          }
+        }
+      } else {
+        removeActiveClass()
+        lastTouchedElement = null
+      }
+    }
+
+    const handleTouchEnd = () => {
+      removeActiveClass()
+      lastTouchedElement = null
+    }
+
+    if (skillsContainer) {
+      skillsContainer.addEventListener('touchstart', handleTouchStart, { passive: false })
+      skillsContainer.addEventListener('touchmove', handleTouchMove, { passive: false })
+      skillsContainer.addEventListener('touchend', handleTouchEnd, { passive: true })
+      skillsContainer.addEventListener('touchcancel', handleTouchEnd, { passive: true })
+      
+      cleanupFunctions.push(() => {
+        if (skillsContainer) {
+          skillsContainer.removeEventListener('touchstart', handleTouchStart)
+          skillsContainer.removeEventListener('touchmove', handleTouchMove)
+          skillsContainer.removeEventListener('touchend', handleTouchEnd)
+          skillsContainer.removeEventListener('touchcancel', handleTouchEnd)
+        }
+      })
+    }
+
     let lastTime = performance.now()
     let isTabVisible = true
     
-    // Handle tab visibility
     const handleVisibilityChange = () => {
       const wasVisible = isTabVisible
       isTabVisible = !document.hidden
-      // Reset time when tab becomes visible again to prevent huge deltaTime
       if (!wasVisible && isTabVisible) {
         lastTime = performance.now()
       }
@@ -168,8 +257,6 @@ function Skills() {
       const currentTime = performance.now()
       let deltaTime = currentTime - lastTime
       
-      // Limit deltaTime to prevent huge jumps when tab becomes active
-      // Max 200ms (equivalent to ~5fps minimum)
       const MAX_DELTA_TIME = 200
       if (deltaTime > MAX_DELTA_TIME) {
         deltaTime = MAX_DELTA_TIME
@@ -179,9 +266,7 @@ function Skills() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Handle canvas resize (only check once per frame, not every resize event)
       if (resizeCanvasToDisplaySize(canvas)) {
-        // Update level objects positions on resize
         if (levelObjectsRef.current.length > 0) {
           levelObjectsRef.current[0].body.pos.x = canvas.width / 2
           levelObjectsRef.current[0].body.pos.y = canvas.height
@@ -191,13 +276,10 @@ function Skills() {
         }
       }
 
-      // Optimize collision checking by reusing array instead of creating new one each frame
       allObjectsRef.current.length = 0
       allObjectsRef.current.push(...objectsRef.current, ...levelObjectsRef.current)
-      // Pass movable objects array to limit glow effect to newest objects only
       checkCollisions(allObjectsRef.current, objectsRef.current)
 
-      // Update and draw movable objects
       for (let i = objectsRef.current.length - 1; i >= 0; i--) {
         if (
           objectsRef.current[i].pos.y > canvas.height + objectsRef.current[i].radius ||
@@ -211,7 +293,6 @@ function Skills() {
         objectsRef.current[i].draw(ctx)
       }
 
-      // Draw level objects
       for (let i = 0; i < levelObjectsRef.current.length; i++) {
         levelObjectsRef.current[i].draw(ctx)
       }
@@ -219,16 +300,13 @@ function Skills() {
       animationFrameRef.current = requestAnimationFrame(animate)
     }
 
-    // Handle window resize
     const handleResize = () => {
       resizeCanvasToDisplaySize(canvas)
     }
     window.addEventListener('resize', handleResize)
 
-    // Start animation
     animate()
 
-    // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
@@ -257,19 +335,39 @@ function Skills() {
     { id: 'microservices', name: 'Microservices' }
   ]
 
+  const row1 = skills.filter((_, index) => index % 2 === 0)
+  const row2 = skills.filter((_, index) => index % 2 === 1)
+  const duplicatedRow1 = [...row1, ...row1]
+  const duplicatedRow2 = [...row2, ...row2]
+
   return (
     <section id="skills" className="section reveal" ref={skillsRef}>
       <h2>Skills</h2>
-      <div className="skills-grid">
-        {skills.map(skill => (
-          <span 
-            key={skill.id}
-            className="skill-item" 
-            id={`${skill.id}-span`}
-          >
-            {skill.name}
-          </span>
-        ))}
+      <div className="skills-carousel-container">
+        <div className="skills-carousel">
+          <div className="skills-row">
+            {duplicatedRow1.map((skill, index) => (
+              <span 
+                key={`row1-${skill.id}-${index}`}
+                className="skill-item" 
+                id={index < row1.length ? `${skill.id}-span` : undefined}
+              >
+                {skill.name}
+              </span>
+            ))}
+          </div>
+          <div className="skills-row">
+            {duplicatedRow2.map((skill, index) => (
+              <span 
+                key={`row2-${skill.id}-${index}`}
+                className="skill-item" 
+                id={index < row2.length ? `${skill.id}-span` : undefined}
+              >
+                {skill.name}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
       <canvas 
         id="skill-canvas" 
