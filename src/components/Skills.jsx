@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react'
 import ScrollReveal from 'scrollreveal'
-import * as shapes from '../logofall/shapes/index.js'
+import { mapRegistry } from '../logofall/shapes/index.js'
 import { Actor } from '../logofall/models/Actor.js'
 import { checkCollisions } from '../logofall/utils/checkCollisions.js'
 import { groundMap } from '../logofall/shapes/immovable/ground.js'
 import { wallMap } from '../logofall/shapes/immovable/wall.js'
+import { LEVEL, ACTOR, CANVAS } from '../logofall/constants.js'
 
 function Skills() {
   const skillsRef = useRef(null)
@@ -12,6 +13,7 @@ function Skills() {
   const animationFrameRef = useRef(null)
   const objectsRef = useRef([])
   const levelObjectsRef = useRef([])
+  const allObjectsRef = useRef([]) // Pre-allocated array for collision checking
 
   useEffect(() => {
     if (skillsRef.current) {
@@ -27,31 +29,23 @@ function Skills() {
   }, [])
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    try {
+      const canvas = canvasRef.current
+      if (!canvas) return
 
-    const ctx = canvas.getContext('2d')
-    const mapRegistry = {
-      docker: shapes.dockerMap,
-      gitlab: shapes.gitlabMap,
-      kafka: shapes.kafkaMap,
-      microservices: shapes.microservicesMap,
-      pg: shapes.pgMap,
-      rails: shapes.railsMap,
-      redis: shapes.redisMap,
-      rest: shapes.restMap,
-      rspec: shapes.rspecMap,
-      ruby: shapes.rubyMap,
-      sentry: shapes.sentryMap,
-      sidekiq: shapes.sidekiqMap
-    }
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        console.error('Failed to get canvas context')
+        return
+      }
 
     function resizeCanvasToDisplaySize(canvas) {
       const rect = canvas.getBoundingClientRect()
-      const scale = 1
+      const scale = CANVAS.SCALE
       const width = Math.floor(rect.width * scale)
       const height = Math.floor(rect.height * scale)
 
+      // Only resize if dimensions actually changed
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width
         canvas.height = height
@@ -65,9 +59,16 @@ function Skills() {
       if (!span) return
 
       const handleMouseEnter = () => {
-        const x = Math.random() * (canvas.width - 50) + 25
+        const spawnMargin = ACTOR.SPAWN_X_MARGIN * 2
+        const x = Math.random() * (canvas.width - spawnMargin) + ACTOR.SPAWN_X_MARGIN
         objectsRef.current.push(
-          new Actor(x, -100, map, { type: 'circle', radius: 25 }, '#bbf7d0')
+          new Actor(
+            x, 
+            ACTOR.SPAWN_Y_OFFSET, 
+            map, 
+            { type: 'circle', radius: ACTOR.SPAWN_RADIUS }, 
+            ACTOR.DEFAULT_COLOR
+          )
         )
       }
 
@@ -81,33 +82,63 @@ function Skills() {
     // Initialize canvas size
     resizeCanvasToDisplaySize(canvas)
 
-    // Initialize level objects
-    levelObjectsRef.current = [
-      new Actor(
-        canvas.width / 2,
-        canvas.height,
-        groundMap,
-        { type: 'rect', width: 700, height: 2 },
-        '#bbf7d0',
-        false
-      ),
-      new Actor(
-        0,
-        canvas.height / 2,
-        wallMap,
-        { type: 'rect', width: 2, height: 500 },
-        '#bbf7d0',
-        false
-      ),
-      new Actor(
-        canvas.width,
-        canvas.height / 2,
-        wallMap,
-        { type: 'rect', width: 2, height: 500 },
-        '#bbf7d0',
-        false
-      )
-    ]
+    // Initialize level objects (will be updated in animate if canvas size changes)
+    if (canvas.width > 0 && canvas.height > 0) {
+      levelObjectsRef.current = [
+        new Actor(
+          canvas.width / 2,
+          canvas.height,
+          groundMap,
+          { type: 'rect', width: LEVEL.GROUND_WIDTH, height: LEVEL.GROUND_HEIGHT },
+          ACTOR.DEFAULT_COLOR,
+          false
+        ),
+        new Actor(
+          0,
+          canvas.height / 2,
+          wallMap,
+          { type: 'rect', width: LEVEL.WALL_WIDTH, height: LEVEL.WALL_HEIGHT },
+          ACTOR.DEFAULT_COLOR,
+          false
+        ),
+        new Actor(
+          canvas.width,
+          canvas.height / 2,
+          wallMap,
+          { type: 'rect', width: LEVEL.WALL_WIDTH, height: LEVEL.WALL_HEIGHT },
+          ACTOR.DEFAULT_COLOR,
+          false
+        )
+      ]
+    } else {
+      // Initialize with default positions, will be corrected when canvas is resized
+      levelObjectsRef.current = [
+        new Actor(
+          350,
+          400,
+          groundMap,
+          { type: 'rect', width: LEVEL.GROUND_WIDTH, height: LEVEL.GROUND_HEIGHT },
+          ACTOR.DEFAULT_COLOR,
+          false
+        ),
+        new Actor(
+          0,
+          250,
+          wallMap,
+          { type: 'rect', width: LEVEL.WALL_WIDTH, height: LEVEL.WALL_HEIGHT },
+          ACTOR.DEFAULT_COLOR,
+          false
+        ),
+        new Actor(
+          700,
+          250,
+          wallMap,
+          { type: 'rect', width: LEVEL.WALL_WIDTH, height: LEVEL.WALL_HEIGHT },
+          ACTOR.DEFAULT_COLOR,
+          false
+        )
+      ]
+    }
 
     // Setup hover listeners
     const cleanupFunctions = []
@@ -148,7 +179,7 @@ function Skills() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Handle canvas resize
+      // Handle canvas resize (only check once per frame, not every resize event)
       if (resizeCanvasToDisplaySize(canvas)) {
         // Update level objects positions on resize
         if (levelObjectsRef.current.length > 0) {
@@ -160,7 +191,10 @@ function Skills() {
         }
       }
 
-      checkCollisions([...objectsRef.current, ...levelObjectsRef.current])
+      // Optimize collision checking by reusing array instead of creating new one each frame
+      allObjectsRef.current.length = 0
+      allObjectsRef.current.push(...objectsRef.current, ...levelObjectsRef.current)
+      checkCollisions(allObjectsRef.current)
 
       // Update and draw movable objects
       for (let i = objectsRef.current.length - 1; i >= 0; i--) {
@@ -201,6 +235,9 @@ function Skills() {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current)
       }
+    }
+    } catch (error) {
+      console.error('Error in Skills animation setup:', error)
     }
   }, [])
 

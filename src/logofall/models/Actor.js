@@ -1,14 +1,15 @@
 import { PhysicsModel } from './PhysicsModel.js';
 import { RenderShape } from './RenderShape.js';
+import { PHYSICS } from '../constants.js';
 
 export class Actor {
-  constructor(x, y, shapeData, bodyData, color, movable) {
-    this.body = new PhysicsModel(x, y, bodyData, movable = true);
+  constructor(x, y, shapeData, bodyData, color, movable = true) {
+    this.body = new PhysicsModel(x, y, bodyData, 1, movable);
     this.shape = new RenderShape(shapeData, color);
   }
 
   update(canvasHeight, deltaTime) {
-    this.body.applyGravity(0.01, deltaTime);
+    this.body.applyGravity(PHYSICS.GRAVITY, deltaTime);
     this.body.integrate(deltaTime);
   }
 

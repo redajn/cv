@@ -1,3 +1,5 @@
+import { COLLISION, PHYSICS } from '../constants.js';
+
 export function checkCollisions(list) {
   for (let i = 0; i < list.length; i++) {
     for (let j = i + 1; j < list.length; j++) {
@@ -40,7 +42,7 @@ function circleCircle(a, b) {
     const m1 = a.mass;
     const m2 = b.mass;
 
-    const optimizedP = 1.9 * (v1 - v2) / (m1 + m2); // elastic collision impulse
+    const optimizedP = COLLISION.CIRCLE_CIRCLE_ELASTICITY * (v1 - v2) / (m1 + m2); // elastic collision impulse
 
     // velocity adjustment from applied impulse
     // m - mass factor
@@ -57,15 +59,15 @@ function circleCircle(a, b) {
     const tA = a.vel.x * tx + a.vel.y * ty;
     const tB = b.vel.x * tx + b.vel.y * ty;
 
-    a.body.angularVelocity = tA * 0.6/ a.radius
-    b.body.angularVelocity = tB * 0.6/ b.radius
+    a.body.angularVelocity = tA * PHYSICS.ANGULAR_VELOCITY_FACTOR / a.radius
+    b.body.angularVelocity = tB * PHYSICS.ANGULAR_VELOCITY_FACTOR / b.radius
 
-    //  infinit spining fix
-    if (Math.abs(a.body.angularVelocity) < 0.005) {
+    // infinite spinning fix
+    if (Math.abs(a.body.angularVelocity) < PHYSICS.MIN_ANGULAR_VELOCITY_THRESHOLD) {
       a.body.angularVelocity = 0
     }
 
-    if (Math.abs(b.body.angularVelocity) < 0.005) {
+    if (Math.abs(b.body.angularVelocity) < PHYSICS.MIN_ANGULAR_VELOCITY_THRESHOLD) {
       b.body.angularVelocity = 0
     }
   }
@@ -104,17 +106,17 @@ function circleRect(circle, rect) {
     // new vector
     const v = circle.vel.x * nx + circle.vel.y * ny;
 
-    circle.vel.x -= 1.4 * v * nx;
-    circle.vel.y -= 1.4 * v * ny;
+    circle.vel.x -= COLLISION.CIRCLE_RECT_ELASTICITY * v * nx;
+    circle.vel.y -= COLLISION.CIRCLE_RECT_ELASTICITY * v * ny;
 
-    // *************************************************** FRICTION
+    // FRICTION
     const tx = -ny, ty = nx; // tangent to the normal
     const tangSpeed = circle.vel.x * tx + circle.vel.y * ty;
-    const friction = 0.35;
-    circle.body.angularVelocity = (tangSpeed * 0.6 / circle.radius)
+    const friction = COLLISION.CIRCLE_RECT_FRICTION;
+    circle.body.angularVelocity = (tangSpeed * PHYSICS.ANGULAR_VELOCITY_FACTOR / circle.radius)
 
-    //  infinit spining fix
-    if (Math.abs(circle.body.angularVelocity) < 0.005) {
+    // infinite spinning fix
+    if (Math.abs(circle.body.angularVelocity) < PHYSICS.MIN_ANGULAR_VELOCITY_THRESHOLD) {
       circle.body.angularVelocity = 0
     }
 

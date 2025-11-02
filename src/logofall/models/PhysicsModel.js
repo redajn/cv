@@ -1,3 +1,5 @@
+import { PHYSICS } from '../constants.js';
+
 export class PhysicsModel {
   constructor(x, y, shape, mass = 1, movable = true) {
     this.pos = { x, y };
@@ -14,12 +16,12 @@ export class PhysicsModel {
   }
 
   applyGravity(gravity, deltaTime) {
-    const normalizedDelta = deltaTime / 8;
+    const normalizedDelta = deltaTime / PHYSICS.DELTA_TIME_NORMALIZER;
     this.vel.y += gravity * this.mass * normalizedDelta;
   }
 
   integrate(deltaTime) {
-    const normalizedDelta = deltaTime / 8;
+    const normalizedDelta = deltaTime / PHYSICS.DELTA_TIME_NORMALIZER;
     if (this.movable && !this.resting) {
       this.angle += this.angularVelocity * normalizedDelta;
     }

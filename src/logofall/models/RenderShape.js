@@ -40,6 +40,7 @@ export class RenderShape {
           break;
         case 'arc':
           ctx.arc(...data);
+          break;
         default:
           console.log('Unknown draw method');
       }
