@@ -194,7 +194,8 @@ function Skills() {
       // Optimize collision checking by reusing array instead of creating new one each frame
       allObjectsRef.current.length = 0
       allObjectsRef.current.push(...objectsRef.current, ...levelObjectsRef.current)
-      checkCollisions(allObjectsRef.current)
+      // Pass movable objects array to limit glow effect to newest objects only
+      checkCollisions(allObjectsRef.current, objectsRef.current)
 
       // Update and draw movable objects
       for (let i = objectsRef.current.length - 1; i >= 0; i--) {

@@ -1,13 +1,24 @@
+import { GLOW } from '../constants.js';
+
 export class RenderShape {
   constructor(shape, strokeStyle = '#bbf7d0') {
     this.shape = shape;
     this.strokeStyle = strokeStyle;
   }
 
-  draw(ctx, x, y, angle, body) {
+  draw(ctx, x, y, angle, body, glowIntensity = 0) {
     ctx.save();
     ctx.translate(x,y);
     ctx.rotate(angle);
+
+    // Apply glow effect if intensity > 0
+    if (glowIntensity > 0) {
+      ctx.shadowBlur = GLOW.BLUR_RADIUS * glowIntensity;
+      ctx.shadowColor = GLOW.COLOR;
+    } else {
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = 'transparent';
+    }
 
     ctx.beginPath();
     for (let i = 0; i < this.shape.length; i++) {

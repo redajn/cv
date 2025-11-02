@@ -34,3 +34,13 @@ export const CANVAS = {
   SCALE: 1
 }
 
+// Glow effect constants
+export const GLOW = {
+  INTENSITY: 1.0,           // Initial glow intensity
+  DECAY_RATE: 0.05,         // How fast glow fades per frame
+  COLOR: '#bbf7d0',         // Glow color
+  BLUR_RADIUS: 15,          // Shadow blur radius at max intensity
+  MAX_INTENSITY: 1.0,       // Maximum glow intensity
+  MAX_OBJECTS_WITH_GLOW: 20 // Maximum number of newest objects that can glow on collision
+}
+

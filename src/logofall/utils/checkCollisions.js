@@ -1,23 +1,32 @@
-import { COLLISION, PHYSICS } from '../constants.js';
+import { COLLISION, PHYSICS, GLOW } from '../constants.js';
 
-export function checkCollisions(list) {
+export function checkCollisions(list, movableObjects = null) {
+  // Create a Set of objects that are eligible for glow (last N movable objects)
+  const glowEligibleSet = new Set();
+  if (movableObjects && movableObjects.length > 0) {
+    const startIndex = Math.max(0, movableObjects.length - GLOW.MAX_OBJECTS_WITH_GLOW);
+    for (let i = startIndex; i < movableObjects.length; i++) {
+      glowEligibleSet.add(movableObjects[i]);
+    }
+  }
+
   for (let i = 0; i < list.length; i++) {
     for (let j = i + 1; j < list.length; j++) {
       const a = list[i];
       const b = list[j];
 
       if (a.body.shape.type === 'circle' && b.body.shape.type === 'circle') {
-        circleCircle(a, b);
+        circleCircle(a, b, glowEligibleSet);
       } else if (a.body.shape.type === 'circle' && b.body.shape.type === 'rect') {
-        circleRect(a, b);
+        circleRect(a, b, glowEligibleSet);
       } else if (a.body.shape.type === 'rect' && b.body.shape.type === 'circle') {
-        circleRect(b, a);
+        circleRect(b, a, glowEligibleSet);
       }
     }
   }
 }
 
-function circleCircle(a, b) {
+function circleCircle(a, b, glowEligibleSet) {
   const dx = b.pos.x - a.pos.x;
   const dy = b.pos.y - a.pos.y;
   const distance = Math.sqrt(dx * dx + dy * dy);
@@ -70,10 +79,19 @@ function circleCircle(a, b) {
     if (Math.abs(b.body.angularVelocity) < PHYSICS.MIN_ANGULAR_VELOCITY_THRESHOLD) {
       b.body.angularVelocity = 0
     }
+
+    // Trigger glow effect on collision (only for newest objects)
+    if (a.triggerGlow && b.triggerGlow) {
+      // Only apply glow if both objects are in the eligible set (last N objects)
+      if (glowEligibleSet.has(a) && glowEligibleSet.has(b)) {
+        a.triggerGlow(GLOW.INTENSITY);
+        b.triggerGlow(GLOW.INTENSITY);
+      }
+    }
   }
 }
 
-function circleRect(circle, rect) {
+function circleRect(circle, rect, glowEligibleSet) {
   const cx = circle.pos.x;
   const cy = circle.pos.y;
   const cr = circle.radius;
@@ -125,5 +143,11 @@ function circleRect(circle, rect) {
 
     circle.vel.x += deltaTangSpeed * tx;
     circle.vel.y += deltaTangSpeed * ty;
+
+    // Trigger glow effect on collision (only for circle, not for walls/ground)
+    // Only apply glow if circle is in the eligible set (last N objects)
+    if (circle.triggerGlow && glowEligibleSet.has(circle)) {
+      circle.triggerGlow(GLOW.INTENSITY);
+    }
   }
 }

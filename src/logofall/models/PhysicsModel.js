@@ -13,6 +13,8 @@ export class PhysicsModel {
     this.movable = movable;
 
     this.resting = false;
+    this.glowIntensity = 0; // Glow effect intensity (0-1)
+    this.hasUsedGlow = false; // Track if object has used its "free" glow once
   }
 
   applyGravity(gravity, deltaTime) {
