@@ -627,6 +627,9 @@ function About() {
         isSwipe = true
         if (!manualControl) {
           manualControl = true
+          setIsManualMode(true)
+          canvas.setAttribute('tabindex', '0')
+          canvas.focus()
         }
       }
 
@@ -757,16 +760,6 @@ function About() {
     }
   }, [])
 
-  const handleOverlayClick = (e) => {
-    if (isManualMode && e.target.classList.contains('snake-overlay')) {
-      // Click outside canvas - deactivate manual mode
-      const canvas = canvasRef.current
-      if (canvas) {
-        canvas.click()
-      }
-    }
-  }
-
   return (
     <section id="about" className="section reveal" ref={aboutRef}>
       <h2>About Me</h2>
@@ -800,10 +793,6 @@ function About() {
           }}
         />
       </div>
-      <div 
-        className={`snake-overlay ${isManualMode ? 'active' : ''}`}
-        onClick={handleOverlayClick}
-      />
     </section>
   )
 }
