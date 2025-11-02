@@ -120,9 +120,30 @@ function Skills() {
 
     // Animation loop
     let lastTime = performance.now()
+    let isTabVisible = true
+    
+    // Handle tab visibility
+    const handleVisibilityChange = () => {
+      const wasVisible = isTabVisible
+      isTabVisible = !document.hidden
+      // Reset time when tab becomes visible again to prevent huge deltaTime
+      if (!wasVisible && isTabVisible) {
+        lastTime = performance.now()
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
     function animate() {
       const currentTime = performance.now()
-      const deltaTime = currentTime - lastTime
+      let deltaTime = currentTime - lastTime
+      
+      // Limit deltaTime to prevent huge jumps when tab becomes active
+      // Max 200ms (equivalent to ~5fps minimum)
+      const MAX_DELTA_TIME = 200
+      if (deltaTime > MAX_DELTA_TIME) {
+        deltaTime = MAX_DELTA_TIME
+      }
+      
       lastTime = currentTime
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -175,6 +196,7 @@ function Skills() {
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
       cleanupFunctions.forEach(cleanup => cleanup())
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current)
